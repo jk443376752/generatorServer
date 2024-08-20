@@ -1,0 +1,94 @@
+package ${packagePath}.service.impl;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import ${packagePath}.mapper.${upperClassName}Mapper;
+import ${packagePath}.entity.${upperClassName};
+import ${packagePath}.service.${upperClassName}Service;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+#if (${needLombok})
+import lombok.extern.slf4j.Slf4j;
+#end
+import java.util.List;
+
+/**
+ * @author ${author}
+ * @since ${since}
+ */
+@Service
+#if (${needLombok})
+@Slf4j
+#end
+public class ${upperClassName}ServiceImpl extends ServiceImpl<${upperClassName}Mapper, ${upperClassName}> implements ${upperClassName}Service {
+
+    @Autowired
+    private ${upperClassName}Mapper ${lowClassName}Mapper;
+#if (${methods.findPage.enabled})
+
+    @Override
+    public Page<${upperClassName}> ${methods.findPage.name}(${upperClassName} params) {
+        Page<${upperClassName}> page = new Page<>(1, 10);
+        QueryWrapper<${upperClassName}> query = new QueryWrapper();
+#foreach ($column in $columns)
+#if(${column.fieldType}=="String")
+        query.like(StringUtils.isNotBlank(params.get${column.upperFieldName}()),"${column.dbName}","%"+params.get${column.upperFieldName}()+"%");
+#else
+        query.eq(params.get${column.upperFieldName}()!=null,"${column.dbName}",params.get${column.upperFieldName}());
+#end
+#end
+        return ${lowClassName}Mapper.selectPage(page, query);
+    }
+
+    @Override
+    public Page<${upperClassName}> ${methods.findPage.name}(Page page,#foreach ($column in $columns)${column.fieldType} ${column.fieldName}#if($foreach.count != $columns.size()),#end#end) {
+        QueryWrapper<${upperClassName}> query = new QueryWrapper();
+#foreach ($column in $columns)
+#if(${column.fieldType}=="String")
+        query.like(StringUtils.isNotBlank(${column.fieldName}),"${column.dbName}","%"+${column.fieldName}+"%");
+#else
+        query.eq(${column.fieldName}!=null,"${column.dbName}",${column.fieldName});
+#end
+#end
+        return ${lowClassName}Mapper.selectPage(page, query);
+    }
+#end
+#if (${methods.findList.enabled})
+
+    @Override
+    public List<${upperClassName}> ${methods.findList.name}(${upperClassName} params){
+        QueryWrapper<${upperClassName}> query = new QueryWrapper();
+        return ${lowClassName}Mapper.selectList(query);
+    }
+#end
+#if (${methods.findById.enabled})
+
+    @Override
+    public ${upperClassName} ${methods.findById.name}(Long id) {
+        return ${lowClassName}Mapper.selectById(id);
+    }
+#end
+#if (${methods.save.enabled})
+
+    @Override
+    public int ${methods.save.name}(${upperClassName} ${lowClassName}) {
+        return ${lowClassName}Mapper.insert(${lowClassName});
+    }
+#end
+#if (${methods.update.enabled})
+
+    @Override
+    public int ${methods.update.name}(${upperClassName} ${lowClassName}) {
+        return ${lowClassName}Mapper.updateById(${lowClassName});
+    }
+#end
+#if (${methods.delete.enabled})
+
+    @Override
+    public int ${methods.delete.name}(Long id) {
+        return ${lowClassName}Mapper.deleteById(id);
+    }
+#end
+
+}

@@ -1,0 +1,55 @@
+server:
+  port: 8080
+  tomcat:
+    uri-encoding: utf-8
+    max-connections: 500
+    connection-timeout: 30000
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+template:
+  mybatis:
+    - fileName: _className_Controller.java.vm
+      filePath: controller
+    - fileName: _className_Service.java.vm
+      filePath: service
+    - fileName: _className_ServiceImpl.java.vm
+      filePath: service/impl
+    - fileName: _className_Mapper.java.vm
+      filePath: mapper
+    - fileName: _className_Mapper.xml.vm
+      filePath: mapper
+    - fileName: _className_.java.vm
+      filePath: entity
+    - fileName: PageResult.java.vm
+      filePath: entity
+  mybatisPlus:
+    - fileName: _className_Controller.java.vm
+      filePath: controller
+    - fileName: _className_Service.java.vm
+      filePath: service
+    - fileName: _className_ServiceImpl.java.vm
+      filePath: service/impl
+    - fileName: _className_Mapper.java.vm
+      filePath: mapper
+    - fileName: _className_Mapper.xml.vm
+      filePath: mapper
+    - fileName: _className_.java.vm
+      filePath: entity
+  jpa:
+    - fileName: _className_Controller.java.vm
+      filePath: controller
+    - fileName: _className_Service.java.vm
+      filePath: service
+    - fileName: _className_ServiceImpl.java.vm
+      filePath: service/impl
+    - fileName: _className_Specifications.java.vm
+      filePath: repository
+    - fileName: _className_Repository.java.vm
+      filePath: repository
+    - fileName: _className_.java.vm
+      filePath: domain
+    - fileName: PageResult.java.vm
+      filePath: domain

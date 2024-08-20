@@ -1,0 +1,155 @@
+package ${packagePath}.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+#if (${needSwagger})
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+#end
+#if (${needValidator})
+import org.springframework.validation.annotation.Validated;
+#end
+import org.springframework.web.bind.annotation.*;
+import ${packagePath}.domain.${upperClassName};
+import ${packagePath}.service.${upperClassName}Service;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import ${packagePath}.domain.PageResult;
+import java.util.List;
+
+/**
+ * ${comment}
+ *
+ * @author ${author}
+ * @since ${since}
+ */
+@RestController
+@RequestMapping("${apiPath}")
+#if (${needSwagger})
+@Api(tags = "${comment}控制器")
+#end
+public class ${upperClassName}Controller {
+
+    @Autowired
+    private ${upperClassName}Service ${lowClassName}Service;
+
+#if (${methods.findPage.enabled})
+    /**
+     * 分页查询
+     *
+     * @param params
+     * @return
+     */
+#if (${needSwagger})
+    @ApiOperation(value = "分页查询",notes = "分页查询",produces = "application/json")
+    @ApiResponses({@ApiResponse(code = 200, message = "查询成功")})
+#end
+    @PostMapping("$methods.findPage.apiPath")
+    public ResponseEntity<PageResult<${upperClassName}>> ${methods.findPage.name}(@RequestBody ${upperClassName} params, Pageable pageable) {
+        PageResult<${upperClassName}> result = ${lowClassName}Service.${methods.findPage.name}(params, pageable);
+        return ResponseEntity.ok(result);
+    }
+#end
+#if (${methods.findList.enabled})
+    /**
+     * 列表查询
+     *
+     * @param params
+     * @return
+     */
+    #if (${needSwagger})
+    @ApiOperation(value = "列表查询",notes = "列表查询",produces = "application/json")
+    @ApiResponses({@ApiResponse(code = 200, message = "查询成功")})
+    #end
+@PostMapping("$methods.findList.apiPath")
+    public ResponseEntity<List<${upperClassName}>> ${methods.findList.name}(@RequestBody ${upperClassName} params) {
+        List<${upperClassName}> result = ${lowClassName}Service.${methods.findList.name}(params);
+        return ResponseEntity.ok(result);
+    }
+#end
+#if (${methods.findById.enabled})
+
+    /**
+     * 查询
+     *
+     * @param id
+     * @return
+     */
+#if (${needSwagger})
+    @ApiOperation(value = "查询", notes = "查询详情")
+    @ApiResponses({@ApiResponse(code = 200, message = "查询成功")})
+#end
+    @GetMapping("${methods.findById.apiPath}")
+    public ResponseEntity<${upperClassName}> ${methods.findById.name}(@PathVariable("id") Long id) {
+        ${upperClassName} ${lowClassName} = ${lowClassName}Service.${methods.findById.name}(id);
+        return ResponseEntity.ok(${lowClassName});
+    }
+#end
+#if (${methods.save.enabled})
+
+    /**
+     * 新增
+     *
+     * @param ${lowClassName}
+     * @return
+     */
+#if (${needSwagger})
+    @ApiOperation(value = "新增", notes = "新增数据")
+    @ApiResponses({@ApiResponse(code = 200, message = "操作成功")})
+#end
+#if(${methods.save.apiPath.length()}>0)
+    @PostMapping("${methods.save.apiPath}")
+#else
+    @PostMapping
+#end
+    public ResponseEntity<${upperClassName}> ${methods.save.name}(#if (${needValidator}) @Validated #end @RequestBody ${upperClassName} ${lowClassName}) {
+        ${upperClassName} result = ${lowClassName}Service.${methods.save.name}(${lowClassName});
+        return ResponseEntity.ok(result);
+    }
+#end
+#if (${methods.update.enabled})
+
+    /**
+     * 修改
+     *
+     * @param ${lowClassName}
+     * @return
+     */
+#if (${needSwagger})
+    @ApiOperation(value = "修改", notes = "修改数据")
+    @ApiResponses({@ApiResponse(code = 200, message = "操作成功")})
+#end
+#if(${methods.update.apiPath.length()}>0)
+    @PutMapping("${methods.update.apiPath}")
+#else
+    @PutMapping
+#end
+    public ResponseEntity<${upperClassName}> ${methods.update.name}(#if (${needValidator}) @Validated #end @RequestBody ${upperClassName} ${lowClassName}) {
+        ${upperClassName} result = ${lowClassName}Service.${methods.update.name}(${lowClassName});
+        return ResponseEntity.ok(result);
+    }
+#end
+#if (${methods.delete.enabled})
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @return
+     */
+#if (${needSwagger})
+    @ApiOperation(value = "删除", notes = "删除数据")
+#end
+    @DeleteMapping("${methods.delete.apiPath}")
+    public ResponseEntity<Void> ${methods.delete.name}(@PathVariable("id") Long id) {
+        ${lowClassName}Service.${methods.delete.name}(id);
+        return ResponseEntity.ok(null);
+    }
+#end
+
+}

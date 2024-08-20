@@ -1,0 +1,40 @@
+package ${packagePath}.service;
+
+import ${packagePath}.entity.${upperClassName};
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
+/**
+ * @author ${author}
+ * @since ${since}
+ */
+public interface ${upperClassName}Service extends IService<${upperClassName}> {
+#if (${methods.findPage.enabled})
+
+    Page<${upperClassName}> ${methods.findPage.name}(${upperClassName} params);
+
+    Page<${upperClassName}> ${methods.findPage.name}(Page page,#foreach ($column in $columns)${column.fieldType} ${column.fieldName}#if($foreach.count != $columns.size()),#end#end);
+#end
+#if (${methods.findList.enabled})
+
+    List<${upperClassName}> ${methods.findList.name}(${upperClassName} params);
+#end
+#if (${methods.findById.enabled})
+
+    ${upperClassName} ${methods.findById.name}(Long id);
+#end
+#if (${methods.save.enabled})
+
+    int ${methods.save.name}(${upperClassName} ${lowClassName});
+#end
+#if (${methods.update.enabled})
+
+    int ${methods.update.name}(${upperClassName} ${lowClassName});
+#end
+#if (${methods.delete.enabled})
+
+    int ${methods.delete.name}(Long id);
+#end
+
+}

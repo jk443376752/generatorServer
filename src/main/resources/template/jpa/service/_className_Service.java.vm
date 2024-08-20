@@ -1,0 +1,39 @@
+package ${packagePath}.service;
+
+import ${packagePath}.domain.${upperClassName};
+import org.springframework.data.domain.Pageable;
+import ${packagePath}.domain.PageResult;
+
+import java.util.List;
+
+/**
+ * @author ${author}
+ * @since ${since}
+ */
+public interface  ${upperClassName}Service {
+#if (${methods.findPage.enabled})
+
+    PageResult<${upperClassName}> ${methods.findPage.name}(${upperClassName} params, Pageable pageable);
+#end
+#if (${methods.findList.enabled})
+
+    List<${upperClassName}> ${methods.findList.name}(${upperClassName} params);
+#end
+#if (${methods.findById.enabled})
+
+    ${upperClassName} ${methods.findById.name}(Long id);
+#end
+#if (${methods.delete.enabled})
+
+    ${upperClassName} ${methods.save.name}(${upperClassName} ${lowClassName});
+#end
+#if (${methods.update.enabled})
+
+    ${upperClassName} ${methods.update.name}(${upperClassName} ${lowClassName});
+#end
+#if (${methods.delete.enabled})
+
+    void ${methods.delete.name}(Long id);
+#end
+
+}

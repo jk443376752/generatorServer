@@ -1,0 +1,61 @@
+package ${packagePath}.entity;
+#if (${needLombok})
+import lombok.Data;
+#end
+#if (${needSwagger})
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+#end
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * 分页响应实体
+ *
+ * @author ${author}
+ * @since ${since}
+ */
+#if (${needLombok})
+@Data
+#end
+#if (${needSwagger})
+@ApiModel(value = "PageResult", description = "分页响应类")
+#end
+public class PageResult<T> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 数据集合
+    */
+#if (${needSwagger})
+    @ApiModelProperty("数据集合")
+#end
+    private List<T> content;
+
+    /**
+     * 总条数
+    */
+#if (${needSwagger})
+    @ApiModelProperty("总条数")
+#end
+    private long totalElements;
+
+#if (!${needLombok})
+    public List<T> getContent() {
+        return content;
+    }
+
+    public void setContent(List<T> content) {
+        this.content = content;
+    }
+
+    public long getTotalElements() {
+        return totalElements;
+    }
+
+    public void setTotalElements(long totalElements) {
+        this.totalElements = totalElements;
+    }
+#end
+}

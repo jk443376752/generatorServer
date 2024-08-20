@@ -1,0 +1,68 @@
+package ${packagePath}.entity;
+
+import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableName;
+#if (${needSwagger})
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+#end
+#if (${needValidator})
+import javax.validation.constraints.NotBlank;
+#end
+#if (${needLombok})
+import lombok.Data;
+#end
+
+/**
+ * ${comment}
+ * @author ${author}
+ * @since ${since}
+ */
+#if (${needLombok})
+@Data
+#end
+@TableName("${tableName}")
+#if (${needSwagger})
+@ApiModel(value = "${upperClassName}", description = "${comment}")
+#end
+public class ${upperClassName} implements Serializable{
+
+    private static final long serialVersionUID=1L;
+
+#foreach ($column in $columns)
+    /**
+     *  $column.comment
+     */
+#if (${needSwagger})
+    @ApiModelProperty("$column.comment")
+#end
+#if (${needValidator})
+    @NotBlank(message = "【$column.comment】不能为空")
+#end
+#if (${column.fieldName}=="id")
+    @TableId(value = "${column.dbName}", type = IdType.AUTO)
+    private ${column.fieldType} ${column.fieldName};
+#end
+#if (${column.fieldName}!="id")
+    @TableField("${column.dbName}")
+    private ${column.fieldType} ${column.fieldName};
+#end
+
+#end
+#if (!${needLombok})
+#foreach ($column in $columns)
+
+    public ${column.fieldType} get${column.upperFieldName}() {
+        return ${column.fieldName};
+    }
+
+    public void set${column.upperFieldName}(${column.fieldType} ${column.fieldName}) {
+        this.${column.fieldName} = ${column.fieldName};
+    }
+#end
+
+#end
+}

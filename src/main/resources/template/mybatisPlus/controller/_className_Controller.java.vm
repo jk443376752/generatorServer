@@ -1,0 +1,168 @@
+package ${packagePath}.controller;
+
+import io.swagger.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.kj.server.common.Result;
+#if (${needSwagger})
+#end
+#if (${needValidator})
+import org.springframework.validation.annotation.Validated;
+#end
+import org.springframework.web.bind.annotation.*;
+import ${packagePath}.entity.${upperClassName};
+import ${packagePath}.service.${upperClassName}Service;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import java.util.List;
+
+/**
+ * ${comment}
+ *
+ * @author ${author}
+ * @since ${since}
+ */
+@RestController
+@RequestMapping("${apiPath}")
+#if (${needSwagger})
+@Api(tags = "${comment}控制器")
+#end
+public class ${upperClassName}Controller {
+
+    @Autowired
+    private ${upperClassName}Service ${lowClassName}Service;
+
+#if (${methods.findPage.enabled})
+    /**
+     * 按对象分页查询POST
+     * @param params
+     * @return
+     */
+#if (${needSwagger})
+    @ApiOperation(value = "按对象分页查询POST",notes = "按对象分页查询POST",produces = "application/json")
+#end
+    @PostMapping("$methods.findPage.apiPath")
+    public Result<Page<${upperClassName}>> ${methods.findPage.name}(@RequestBody ${upperClassName} params) {
+        Page<${upperClassName}> result = ${lowClassName}Service.${methods.findPage.name}(params);
+        return Result.success(result);
+    }
+
+    /**
+     * 按条件分页查询GET
+     */
+#if (${needSwagger})
+    @ApiOperation(value = "按条件分页查询GET",notes = "按条件分页查询GET")
+    @ApiImplicitParams({
+#foreach ($column in $columns)
+        @ApiImplicitParam(name="${column.fieldName}",value="${column.comment}",dataType="${column.fieldType}")#if($foreach.count != $columns.size()),
+#end
+#end
+
+    })
+#end
+    @GetMapping("$methods.findPage.apiPath")
+    public Result<Page<${upperClassName}>> ${methods.findPage.name}(
+        @RequestParam(value="current",defaultValue ="1") Integer current,
+        @RequestParam(value="size",defaultValue ="10") Integer size,
+#foreach ($column in $columns)
+        @RequestParam(value="${column.fieldName}",required=false) ${column.fieldType} ${column.fieldName}#if($foreach.count != $columns.size()),
+#end
+#end) {
+        Page<Student> page = new Page<>(current, size);
+        Page<${upperClassName}> result = ${lowClassName}Service.${methods.findPage.name}(page,#foreach ($column in $columns)${column.fieldName}#if($foreach.count != $columns.size()),#end#end);
+        return Result.success(result);
+    }
+
+#end
+#if (${methods.findList.enabled})
+    /**
+     * 根据对象查询列表
+     * @param params
+     * @return
+     */
+#if (${needSwagger})
+    @ApiOperation(value = "根据对象查询列表",notes = "根据对象查询列表",produces = "application/json")
+#end
+    @PostMapping("$methods.findList.apiPath")
+    public Result<List<${upperClassName}>> ${methods.findList.name}(@RequestBody ${upperClassName} params) {
+        List<${upperClassName}> result = ${lowClassName}Service.${methods.findList.name}(params);
+        return Result.success(result);
+    }
+#end
+#if (${methods.findById.enabled})
+
+    /**
+     * 根据id查询详情
+     * @param id
+     * @return
+     */
+#if (${needSwagger})
+    @ApiOperation(value = "根据id查询详情", notes = "根据id查询详情")
+#end
+    @GetMapping("${methods.findById.apiPath}")
+    public Result<${upperClassName}> ${methods.findById.name}(@PathVariable("id") Long id) {
+        ${upperClassName} ${lowClassName} = ${lowClassName}Service.${methods.findById.name}(id);
+        return Result.success(${lowClassName});
+    }
+#end
+#if (${methods.save.enabled})
+
+    /**
+     * 新增一条数据
+     * @param ${lowClassName}
+     * @return
+     */
+#if (${needSwagger})
+    @ApiOperation(value = "新增一条数据", notes = "新增一条数据")
+#end
+#if(${methods.save.apiPath.length()}>0)
+    @PostMapping("${methods.save.apiPath}")
+#else
+    @PostMapping
+#end
+    public Result<Integer> ${methods.save.name}(#if (${needValidator}) @Validated #end @RequestBody ${upperClassName} ${lowClassName}) {
+        int result = ${lowClassName}Service.${methods.save.name}(${lowClassName});
+        return Result.success(result);
+    }
+#end
+#if (${methods.update.enabled})
+
+    /**
+     * 根据对象修改一条数据
+     *
+     * @param ${lowClassName}
+     * @return
+     */
+#if (${needSwagger})
+    @ApiOperation(value = "根据对象修改一条数据", notes = "根据对象修改一条数据")
+#end
+#if(${methods.update.apiPath.length()}>0)
+    @PutMapping("${methods.update.apiPath}")
+#else
+    @PutMapping
+#end
+    public Result<Integer> ${methods.update.name}(#if (${needValidator}) @Validated #end @RequestBody ${upperClassName} ${lowClassName}) {
+        int result = ${lowClassName}Service.${methods.update.name}(${lowClassName});
+        return Result.success(result);
+    }
+#end
+#if (${methods.delete.enabled})
+
+    /**
+     * 根据id删除一条数据
+     * @param id
+     * @return
+     */
+#if (${needSwagger})
+    @ApiOperation(value = "根据id删除一条数据", notes = "根据id删除一条数据")
+#end
+    @DeleteMapping("${methods.delete.apiPath}")
+    public Result<Integer> ${methods.delete.name}(@PathVariable("id") Long id) {
+        int result = ${lowClassName}Service.${methods.delete.name}(id);
+        return Result.success(result);
+    }
+#end
+
+}

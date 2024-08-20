@@ -1,0 +1,39 @@
+package ${packagePath}.repository;
+
+import ${packagePath}.domain.${upperClassName};
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author ${author}
+ * @since ${since}
+ */
+@Component
+public class ${upperClassName}Specifications {
+
+    public static Specification<${upperClassName}> queryList(${upperClassName} ${lowClassName}) {
+        return (root, query, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+#foreach ($column in $columns)
+            if (${lowClassName}.get${column.upperFieldName}() != null) {
+#if($column.fieldType == "String")
+                predicates.add(builder.like(root.get("$column.fieldName" ).as(String.class), "%" + ${lowClassName}.get${column.upperFieldName}() + "%" ));
+#end
+#if($column.fieldType != "String")
+                predicates.add(builder.equal(root.get("$column.fieldName" ).as(${column.fieldType}.class), ${lowClassName}.get${column.upperFieldName}()));
+#end
+            }
+#end
+            Predicate[] p = new Predicate[predicates.size()];
+            return query.where(builder.and(predicates.toArray(p))).getRestriction();
+        };
+    }
+
+}

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${packagePath}.mapper.${upperClassName}Mapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="${packagePath}.entity.${upperClassName}" id="BaseResultMap">
+#foreach($column in $columns)
+            <result property="${column.fieldName}" column="${column.dbName}"/>
+#end
+    </resultMap>
+
+    <sql id="Base_Column_List">
+#foreach($column in $columns)
+        ${column.dbName},
+#end
+    </sql>
+#if (${methods.findList.enabled})
+
+    <select id="${methods.findList.name}" parameterType="${packagePath}.entity.${upperClassName}" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ${tableName}
+        <where>
+#foreach($column in $columns)
+            <if test="${column.fieldName} != null and ${column.fieldName} !=''">
+                AND ${column.dbName} = #{${column.fieldName}}
+            </if>
+#end
+        </where>
+    </select>
+#end
+#if (${methods.findPage.enabled})
+
+    <select id="${methods.findPage.name}" parameterType="${packagePath}.entity.${upperClassName}" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ${tableName}
+        <where>
+#foreach($column in $columns)
+            <if test="${column.fieldName} != null and ${column.fieldName} !=''">
+                AND ${column.dbName} = #{${column.fieldName}}
+            </if>
+#end
+        </where>
+    </select>
+#end
+#if (${methods.findById.enabled})
+
+    <select id="${methods.findById.name}" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ${tableName}
+        <where>
+            id = #{id}
+        </where>
+    </select>
+#end
+#if (${methods.save.enabled})
+
+    <insert id="${methods.save.name}" parameterType="${packagePath}.entity.${upperClassName}">
+        insert into ${tableName}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+#foreach($column in $columns)
+            <if test="${column.fieldName} != null">
+                ${column.dbName},
+            </if>
+#end
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+#foreach($column in $columns)
+            <if test="${column.fieldName} != null">
+                #{${column.fieldName},jdbcType=VARCHAR},
+            </if>
+#end
+        </trim>
+    </insert>
+#end
+#if (${methods.update.enabled})
+
+    <update id="${methods.update.name}" parameterType="${packagePath}.entity.${upperClassName}">
+        update ${tableName}
+        <set>
+#foreach($column in $columns)
+            <if test="${column.fieldName} != null">
+                ${column.dbName} = #{${column.fieldName},jdbcType=VARCHAR},
+            </if>
+#end
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+#end
+#if (${methods.delete.enabled})
+
+    <delete id="${methods.delete.name}">
+        delete from ${tableName}
+        <where>
+            id = #{id}
+        </where>
+    </delete>
+#end
+
+</mapper>

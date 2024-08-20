@@ -1,0 +1,65 @@
+package ${packagePath}.domain;
+
+#if(${hasBigDecimal})
+import java.math.BigDecimal;
+#end
+import java.io.Serializable;
+import java.util.Date;
+#if (${needSwagger})
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+#end
+#if (${needValidator})
+import javax.validation.constraints.NotBlank;
+#end
+#if (${needLombok})
+import lombok.Data;
+#end
+import javax.persistence.*;
+
+/**
+ * ${comment}
+ *
+ * @author ${author}
+ * @since ${since}
+ */
+@Entity
+#if (${needLombok})
+@Data
+#end
+@Table(name = "${tableName}" )
+#if (${needSwagger})
+@ApiModel(value = "${upperClassName}", description = "${comment}")
+#end
+public class ${upperClassName} implements Serializable{
+
+    private static final long serialVersionUID=1L;
+
+#foreach ($column in $columns)
+    /**
+     *  $column.comment
+     */
+    @Column(name = "$column.dbName" )
+#if (${column.primaryKey})
+    @Id
+#end
+#if (${needValidator})
+    @NotBlank(message = "【$column.comment】不能为空")
+#end
+    private $column.fieldType $column.fieldName;
+
+#end
+#if (!${needLombok})
+#foreach ($column in $columns)
+
+    public ${column.fieldType} get${column.upperFieldName}() {
+        return ${column.fieldName};
+    }
+
+    public void set${column.upperFieldName}(${column.fieldType} ${column.fieldName}) {
+        this.${column.fieldName} = ${column.fieldName};
+    }
+#end
+#end
+
+}

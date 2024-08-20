@@ -1,0 +1,70 @@
+package ${packagePath}.service;
+
+import ${packagePath}.domain.${upperClassName};
+import ${packagePath}.repository.${upperClassName}Repository;
+import ${packagePath}.repository.${upperClassName}Specifications;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import ${packagePath}.domain.PageResult;
+
+import java.util.List;
+
+/**
+ * @author ${author}
+ * @since ${since}
+ */
+@Service
+public class ${upperClassName}ServiceImpl implements ${upperClassName}Service {
+
+    @Autowired
+    private ${upperClassName}Repository ${lowClassName}Repository;
+#if (${methods.findPage.enabled})
+
+    @Override
+    public PageResult<${upperClassName}> ${methods.findPage.name}(${upperClassName} ${lowClassName}, Pageable pageable) {
+        Page<${upperClassName}> page = ${lowClassName}Repository.findAll(${upperClassName}Specifications.queryList(${lowClassName}), pageable);
+        PageResult<${upperClassName}> result = new PageResult();
+        result.setContent(page.getContent());
+        result.setTotalElements(page.getTotalElements());
+        return result;
+    }
+#end
+#if (${methods.findList.enabled})
+
+    @Override
+    public List<${upperClassName}> ${methods.findList.name}(${upperClassName} ${lowClassName}) {
+        return ${lowClassName}Repository.findAll(${upperClassName}Specifications.queryList(${lowClassName}));
+    }
+#end
+#if (${methods.findById.enabled})
+
+    @Override
+    public ${upperClassName} findById(Long id) {
+        return ${lowClassName}Repository.findById(id).orElse(null);
+    }
+#end
+#if (${methods.save.enabled})
+
+    @Override
+    public ${upperClassName} ${methods.save.name}(${upperClassName} ${lowClassName}) {
+        return ${lowClassName}Repository.save(${lowClassName});
+    }
+#end
+#if (${methods.update.enabled})
+
+    @Override
+    public ${upperClassName} ${methods.update.name}(${upperClassName} ${lowClassName}) {
+        return ${lowClassName}Repository.saveAndFlush(${lowClassName});
+    }
+#end
+#if (${methods.delete.enabled})
+
+    @Override
+    public void ${methods.delete.name}(Long id) {
+        ${lowClassName}Repository.deleteById(id);
+    }
+#end
+
+}

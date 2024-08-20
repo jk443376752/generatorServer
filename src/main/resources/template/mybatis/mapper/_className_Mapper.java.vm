@@ -1,0 +1,41 @@
+package ${packagePath}.mapper;
+
+import ${packagePath}.entity.${upperClassName};
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+/**
+ * ${comment}
+ *
+ * @author ${author}
+ * @since ${since}
+ *
+ */
+@Mapper
+public interface ${upperClassName}Mapper {
+#if (${methods.findPage.enabled})
+
+    List<${upperClassName}> ${methods.findPage.name}(${upperClassName} params);
+#end
+#if (${methods.findList.enabled})
+
+    List<${upperClassName}> ${methods.findList.name}();
+#end
+#if (${methods.findById.enabled})
+
+    ${upperClassName} ${methods.findById.name}(String id);
+#end
+#if (${methods.save.enabled})
+
+    int ${methods.save.name}(${upperClassName} ${classname});
+#end
+#if (${methods.update.enabled})
+
+    int ${methods.update.name}(${upperClassName} ${classname});
+#end
+#if (${methods.delete.enabled})
+
+    int ${methods.delete.name}(String id);
+#end
+
+}

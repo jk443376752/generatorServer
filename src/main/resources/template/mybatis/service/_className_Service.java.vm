@@ -1,0 +1,38 @@
+package ${packagePath}.service;
+
+import ${packagePath}.entity.${upperClassName};
+import ${packagePath}.util.PageResult;
+
+import java.util.List;
+
+/**
+ * @author ${author}
+ * @since ${since}
+ */
+public interface ${upperClassName}Service {
+#if (${methods.findPage.enabled})
+
+    PageResult<${upperClassName}> ${methods.findPage.name}(${upperClassName} params);
+#end
+#if (${methods.findList.enabled})
+
+    List<${upperClassName}> ${methods.findList.name}(${upperClassName} params);
+#end
+#if (${methods.findById.enabled})
+
+    ${upperClassName} ${methods.findById.name}(Long id);
+#end
+#if (${methods.save.enabled})
+
+    int ${methods.save.name}(${upperClassName} ${lowClassName});
+#end
+#if (${methods.update.enabled})
+
+    int ${methods.update.name}(${upperClassName} ${lowClassName});
+#end
+#if (${methods.delete.enabled})
+
+    int ${methods.delete.name}(Long id);
+#end
+
+}
